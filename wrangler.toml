@@ -17,4 +17,4 @@ id = "d9963c76c0d74a819e197f8782139cb0"
 
 # 环境变量
 [vars]
-BACKEND = "https://api.dler.io"
+BACKEND = "https://sub.xf.free.hr"
