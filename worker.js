@@ -2979,9 +2979,16 @@ var src_default = {
       for (const url2 of urlParts) {
         const key = generateRandomStr(11);
         if (url2.startsWith("https://") || url2.startsWith("http://")) {
+          // 创建新的 Headers 对象以避免修改原始 request
+          const newHeaders = new Headers(request.headers);
+          // 移除 Host，让 fetch 根据 URL 自动生成正确的 Host
+          newHeaders.delete("Host");
+          // 移除 Referer 避免潜在的隐私泄漏或防盗链拦截
+          newHeaders.delete("Referer");
+
           response = await fetch(url2, {
             method: request.method,
-            headers: request.headers,
+            headers: newHeaders,
             redirect: 'follow', // https://developers.cloudflare.com/workers/runtime-apis/request#constructor
           });
           if (!response.ok)
