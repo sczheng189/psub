@@ -2979,15 +2979,13 @@ var src_default = {
       for (const url2 of urlParts) {
         const key = generateRandomStr(11);
         if (url2.startsWith("https://") || url2.startsWith("http://")) {
-          // 创建新的 Headers 对象以避免修改原始 request
-          const newHeaders = new Headers(request.headers);
-          // 移除 Host，让 fetch 根据 URL 自动生成正确的 Host
-          newHeaders.delete("Host");
-          // 移除 Referer 避免潜在的隐私泄漏或防盗链拦截
-          newHeaders.delete("Referer");
+          // 使用白名单方式，只保留必要的 headers
+          const newHeaders = new Headers();
+          newHeaders.set('User-Agent', request.headers.get('User-Agent') || 'psub/1.0');
+          newHeaders.set('Accept', request.headers.get('Accept') || '*/*');
 
           response = await fetch(url2, {
-            method: request.method,
+            method: 'GET', // 强制使用 GET 方法
             headers: newHeaders,
             redirect: 'follow', // https://developers.cloudflare.com/workers/runtime-apis/request#constructor
           });
